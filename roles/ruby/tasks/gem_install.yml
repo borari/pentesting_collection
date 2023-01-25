@@ -1,0 +1,9 @@
+---
+# tasks list to install ruby gem packages
+- name: Ruby | Gems | Install
+  community.general.gem:
+    name: "{{ item }}"
+    state: latest
+    user_install: true
+  loop: "{{ gem_packages | default([]) }}"
+  when: item is defined
