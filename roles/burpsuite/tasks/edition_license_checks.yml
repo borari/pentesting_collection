@@ -1,0 +1,45 @@
+---
+# tasks list to run Burp Suite edition checks
+- name: Burp Suite | Edition
+  when: burp_edition_yml.stat.exists == False
+  block:
+    - name: Burp Suite | Edition | Prompt
+      ansible.builtin.pause:
+        prompt: |
+          Which Burp Suite edition would you like to install?
+            {% for p in burpsuite_products_map %}
+            {{ loop.index }}. {{ p['name'] }}
+            {% endfor %}
+
+          Enter the number for the product
+      register: _burpsuite_choice
+
+    - name: Burp Suite | Edition | Set Fact
+      ansible.builtin.set_fact:
+        burpsuite_edition: "{{ burpsuite_products_map[_burpsuite_choice.user_input | default(omit) | int - 1]['alias'] }}"
+
+    - name: Burp Suite | Edition | Save Fact
+      ansible.builtin.template:
+        src: templates/edition.yml.j2
+        dest: "{{ kali_user_details.home }}/.burpsuite_edition.yml"
+        mode: 0600
+
+- name: Burp Suite | License
+  when:
+    - burp_license_yml.stat.exists == False
+    - burpsuite_edition == "pro"
+  block:
+    - name: Burp Suite | License | Prompt
+      ansible.builtin.pause:
+        prompt: "Enter the Burp Suite Pro license key:"
+      register: _burpsuite_license_key
+
+    - name: Burp Suite | License | Set Fact
+      ansible.builtin.set_fact:
+        burpsuite_license_key: "{{ _burpsuite_license_key.user_input }}"
+
+    - name: Burp Suite | License | Save Fact
+      ansible.builtin.template:
+        src: templates/license.yml.j2
+        dest: "{{ kali_user_details.home }}/.burpsuite_license.yml"
+        mode: 0600
