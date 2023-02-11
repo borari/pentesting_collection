@@ -1,0 +1,9 @@
+---
+# tasks list to install powerlevel10k
+- name: Zsh | Powerlevel10k | Install
+  ansible.builtin.git:
+    repo: https://github.com/romkatv/powerlevel10k.git
+    dest: "{{ kali_user_details.home }}/.local/share/oh-my-zsh/custom/themes/powerlevel10k"
+    version: master
+    depth: 1
+    force: true

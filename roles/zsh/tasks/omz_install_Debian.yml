@@ -1,0 +1,6 @@
+---
+# tasks list to install oh-my-zsh
+- name: Zsh | Oh-My-Zsh | Install
+  ansible.builtin.shell:
+    cmd: ZSH=~/.local/share/oh-my-zsh sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
+    creates: "{{ kali_user_details.home }}/.local/share/oh-my-zsh/oh-my-zsh.sh"
