@@ -1,0 +1,10 @@
+---
+# tasks list to install vscode extensions
+- name: Vscode | Extensions | Install
+  ansible.builtin.command:
+    cmd: "code-oss --user-data-dir {{ kali_user_details.home }}/.vscode-oss --install-extension {{ item }}"
+    chdir: /usr/bin
+  register: vscode_install_extension_cmd
+  changed_when: "'successfully installed' in vscode_install_extension_cmd.stdout"
+  loop: "{{ vscode_extensions | default([]) }}"
+  when: item is defined
