@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+echo "Running quick Nmap scan to detect open ports."
+nmap -Pn -T4 --max-retries 0 -p- -oN nmap.quick $1
+echo " "
+
+echo "Running deeper Nmap scan on detected open ports."
+nmap -sV -A -p $(grep open nmap.quick | grep -v Warning | sed 's/ open  //g'| awk -F '/' '{print $1}'|tr '\n' ',') -oN nmap.full $1
+echo " "
+
+echo "See below for a quick reference list of open ports and detected banners."
+grep open nmap.full | grep -v Warning | sed 's/ open  //g'
